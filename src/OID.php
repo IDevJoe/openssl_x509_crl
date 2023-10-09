@@ -34,6 +34,14 @@ class OID
 						return self::getOIDFromName('md5withRSAEncryption');
 					case OPENSSL_ALGO_MD4:
 						return self::getOIDFromName('md4withRSAEncryption');
+                    case OPENSSL_ALGO_SHA256:
+                        return self::getOIDFromName('sha256withRSAEncryption');
+                    case OPENSSL_ALGO_SHA384:
+                        return self::getOIDFromName('sha384withRSAEncryption');
+                    case OPENSSL_ALGO_SHA512:
+                        return self::getOIDFromName('sha512withRSAEncryption');
+                    case OPENSSL_ALGO_SHA224:
+                        return self::getOIDFromName('sha224withRSAEncryption');
 					case OPENSSL_ALGO_MD2:
 						return self::getOIDFromName('md2withRSAEncryption');
 					default:
@@ -107,6 +115,10 @@ class OID
 		"1.2.840.113549.1.1.3" => "md4withRSAEncryption",
 		"1.2.840.113549.1.1.4" => "md5withRSAEncryption",
 		"1.2.840.113549.1.1.5" => "sha1withRSAEncryption",
+        "1.2.840.113549.1.1.11" => "sha256withRSAEncryption",
+        "1.2.840.113549.1.1.12" => "sha384withRSAEncryption",
+        "1.2.840.113549.1.1.13" => "sha512withRSAEncryption",
+        "1.2.840.113549.1.1.14" => "sha224withRSAEncryption",
 		//ec
 		"1.2.840.10045.4.1" => "ecdsa-with-SHA1",
 		"1.2.840.10045.4.3.2" => "ecdsa-with-sha256",
