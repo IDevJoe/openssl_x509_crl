@@ -31,7 +31,7 @@ $ci = array(
 );
 $ca_pkey = openssl_pkey_get_private(file_get_contents('ca_key.key'));
 $ca_cert = X509::pem2der(file_get_contents('ca_cert.cer'));
-$crl_data = X509_CRL::create($ci, $ca_pkey, $ca_cert);
+$crl_data = X509_CRL::create($ci, $ca_pkey, $ca_cert, 'http://localhost:8001/test_crl+.crl');
 if(file_put_contents("test_crl.crl", X509::der2pem4crl($crl_data)))
 	echo "<b>CRL generated and saved to 'test_crl.crl'.</b><br><hr>";
 

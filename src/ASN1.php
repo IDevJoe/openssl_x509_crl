@@ -326,7 +326,7 @@ abstract class ASN1
 	 */
 	public function encode() {
 		$content = $this->encodeContent();
-		return chr($this->getTypeByte()) . ASN1::length_der(strlen($content)) . $content;
+		return chr($this->getTypeByte()) . ASN1::length_der(strlen($content ?? "")) . $content;
 	}
 	
 	/**
