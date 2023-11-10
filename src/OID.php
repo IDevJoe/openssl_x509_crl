@@ -140,6 +140,7 @@ class OID
 		"2.16.840.1.113730.1.4" => "netscape-ca-revocation-url",
 		"2.16.840.1.113730.1.13" => "netscape-comment",
 		"2.5.29.32" => "certificatePolicies",
+        "2.5.29.46" => "freshestCRL",
 		
 		// >>>>> pkix (1.3.6.1.5.5.7)
 		// private extension ...

@@ -56,7 +56,7 @@ class X509_CRL
 	 * @param string $ca_cert CA root certificate data in DER format
 	 * @return string CRL in DER format
 	 */
-	static function create($ci, $ca_pkey, $ca_cert, $crlDistPoint = null) {
+	static function create($ci, $ca_pkey, $ca_cert, $freshCrl = null) {
 		$ca_decoded = X509_CERT::decode($ca_cert);
 		
 		//CRL version
@@ -167,10 +167,10 @@ class X509_CRL
 				$cRLNumber->content['VAL'] = new ASN1_OCTETSTRING(false);
 				$cRLNumber->content['VAL']->content[0] = new ASN1_INT($ci['no']);
 			}
-            if($crlDistPoint != null) {
-                $crlExts->content[0]->content['cRLDistributionPoints'] = new ASN1_SEQUENCE;
-                $cRLDP = & $crlExts->content[0]->content['cRLDistributionPoints'];
-                $cRLDP->content['OID'] = new ASN1_OID(OID::getOIDFromName("cRLDistributionPoints"));
+            if($freshCrl != null) {
+                $crlExts->content[0]->content['freshestCRL'] = new ASN1_SEQUENCE;
+                $cRLDP = & $crlExts->content[0]->content['freshestCRL'];
+                $cRLDP->content['OID'] = new ASN1_OID(OID::getOIDFromName("freshestCRL"));
                 $cRLDP->content['VAL'] = new ASN1_OCTETSTRING(false);
                 $cRLDP->content['VAL']->content[0] = new ASN1_SEQUENCE; // tag 16
                 $_crl_val = & $cRLDP->content['VAL']->content[0];
@@ -181,7 +181,7 @@ class X509_CRL
                 $crl_val_0->content[0] = new ASN1_SIMPLE;
                 $crl_val_0_ct = & $crl_val_0->content[0];
                 $crl_val_0_ct->setType(0, true, ASN1_CLASSTYPE_CONTEXT);
-                $crl_val_0_ct->content[0] = new ASN1_SIMPLE($crlDistPoint);
+                $crl_val_0_ct->content[0] = new ASN1_SIMPLE($freshCrl);
                 $crl_val_0_ct->content[0]->setType(6, false, ASN1_CLASSTYPE_CONTEXT);
             }
 		}
