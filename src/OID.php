@@ -182,7 +182,8 @@ class OID
 		"2.5.29.20" => "cRLNumber",
 		"2.5.29.21" => "cRLReason",
 		"2.5.29.23" => "instructionCode",
-		"2.5.29.24" => "invalidityDate",			
+		"2.5.29.24" => "invalidityDate",
+        "2.5.29.27" => "deltaCRLIndicator"
 	);
 	
 	/**

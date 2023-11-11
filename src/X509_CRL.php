@@ -9,21 +9,21 @@
 namespace Ukrbublik\openssl_x509_crl;
 
 use Ukrbublik\openssl_x509_crl\ASN1;
-use Ukrbublik\openssl_x509_crl\ASN1_SIMPLE;
+use Ukrbublik\openssl_x509_crl\ASN1_OCTETSTRING;
+use Ukrbublik\openssl_x509_crl\ASN1_OID;
 use Ukrbublik\openssl_x509_crl\ASN1_SEQUENCE;
+use Ukrbublik\openssl_x509_crl\ASN1_SIMPLE;
 use Ukrbublik\openssl_x509_crl\ASN1_SET;
 use Ukrbublik\openssl_x509_crl\ASN1_NULL;
 use Ukrbublik\openssl_x509_crl\ASN1_UTF8STRING;
 use Ukrbublik\openssl_x509_crl\ASN1_TELETEXSTRING;
 use Ukrbublik\openssl_x509_crl\ASN1_ASCIISTRING;
 use Ukrbublik\openssl_x509_crl\ASN1_BITSTRING;
-use Ukrbublik\openssl_x509_crl\ASN1_OCTETSTRING;
 use Ukrbublik\openssl_x509_crl\ASN1_INT;
 use Ukrbublik\openssl_x509_crl\ASN1_ENUM;
 use Ukrbublik\openssl_x509_crl\ASN1_GENERALTIME;
 use Ukrbublik\openssl_x509_crl\ASN1_UTCTIME;
 use Ukrbublik\openssl_x509_crl\ASN1_BOOL;
-use Ukrbublik\openssl_x509_crl\ASN1_OID;
 use Ukrbublik\openssl_x509_crl\OID;
 use Ukrbublik\openssl_x509_crl\X509;
 use Ukrbublik\openssl_x509_crl\X509_CERT;
@@ -56,7 +56,7 @@ class X509_CRL
 	 * @param string $ca_cert CA root certificate data in DER format
 	 * @return string CRL in DER format
 	 */
-	static function create($ci, $ca_pkey, $ca_cert, $freshCrl = null) {
+	static function create($ci, $ca_pkey, $ca_cert) {
 		$ca_decoded = X509_CERT::decode($ca_cert);
 		
 		//CRL version
@@ -167,7 +167,7 @@ class X509_CRL
 				$cRLNumber->content['VAL'] = new ASN1_OCTETSTRING(false);
 				$cRLNumber->content['VAL']->content[0] = new ASN1_INT($ci['no']);
 			}
-            if($freshCrl != null) {
+            if(isset($ci['freshest_crl'])) {
                 $crlExts->content[0]->content['freshestCRL'] = new ASN1_SEQUENCE;
                 $cRLDP = & $crlExts->content[0]->content['freshestCRL'];
                 $cRLDP->content['OID'] = new ASN1_OID(OID::getOIDFromName("freshestCRL"));
@@ -181,8 +181,16 @@ class X509_CRL
                 $crl_val_0->content[0] = new ASN1_SIMPLE;
                 $crl_val_0_ct = & $crl_val_0->content[0];
                 $crl_val_0_ct->setType(0, true, ASN1_CLASSTYPE_CONTEXT);
-                $crl_val_0_ct->content[0] = new ASN1_SIMPLE($freshCrl);
+                $crl_val_0_ct->content[0] = new ASN1_SIMPLE($ci['freshest_crl']);
                 $crl_val_0_ct->content[0]->setType(6, false, ASN1_CLASSTYPE_CONTEXT);
+            }
+            if(isset($ci['base_crl'])) {
+                $crlExts->content[0]->content['deltaCRLIndicator'] = new ASN1_SEQUENCE;
+                $crlDelta = & $crlExts->content[0]->content['deltaCRLIndicator'];
+                $crlDelta->content['OID'] = new ASN1_OID(OID::getOIDFromName("deltaCRLIndicator"));
+                $crlDelta->content['CRIT'] = new ASN1_BOOL(true);
+                $crlDelta->content['VAL'] = new ASN1_OCTETSTRING(false);
+                $crlDelta->content['VAL']->content[0] = new ASN1_INT($ci['base_crl']);
             }
 		}
 		
