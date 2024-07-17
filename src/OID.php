@@ -51,6 +51,12 @@ class OID
 				switch($digest) {
 					case OPENSSL_ALGO_SHA1:
 						return self::getOIDFromName('ecdsa-with-SHA1');
+                    case OPENSSL_ALGO_SHA256:
+                        return self::getOIDFromName('ecdsa-with-sha256');
+                    case OPENSSL_ALGO_SHA384:
+                        return self::getOIDFromName('ecdsa-with-sha384');
+                    case OPENSSL_ALGO_SHA512:
+                        return self::getOIDFromName('ecdsa-with-sha512');
 					default:
 						return false;
 				}
